@@ -1,12 +1,13 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>TmScores</PageTitle>
 
 <ReuContainer>
     <div class="scores">
         <ReuUploadButton OnUpload="UploadCampaignScores" Accept=".gz">CampaignScores</ReuUploadButton>
         <ReuUploadButton OnUpload="UploadChallengeScores" Accept=".gz">ChallengeScores</ReuUploadButton>
         <ReuUploadButton OnUpload="UploadGeneralScores" Accept=".gz">GeneralScores</ReuUploadButton>
+        <ReuUploadButton OnUpload="UploadLadderScores" Accept=".gz">LadderScores</ReuUploadButton>
     </div>
     <div style="margin-top: 1rem; overflow: auto">
         <ReuObjectTree Value="scores" IsExpandedByDefault="true"></ReuObjectTree>
@@ -34,5 +35,11 @@
     {
         using var ms = new MemoryStream(args.Data);
         scores = GeneralScores.Deserialize(ms);
+    }
+
+    private void UploadLadderScores(UploadEventArgs args)
+    {
+        using var ms = new MemoryStream(args.Data);
+        scores = LadderScores.Deserialize(ms);
     }
 }
