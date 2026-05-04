@@ -71,8 +71,8 @@ public sealed class Scores : IReadableWritable
             nicknames[i] = rw.String(nicknames[i]);
         }
 
-        Span<string> filePaths = [];
-        Span<string> ghostUrls = [];
+        Span<string?> filePaths = [];
+        Span<string?> ghostUrls = [];
 
         if (rw.Version >= 8)
         {

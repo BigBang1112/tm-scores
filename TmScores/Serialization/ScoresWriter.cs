@@ -9,8 +9,14 @@ internal sealed class ScoresWriter(Stream output, bool leaveOpen = true)
 {
     private static readonly Encoding encoding = Encoding.UTF8;
 
-    public override void Write(string value)
+    public override void Write(string? value)
     {
+        if (string.IsNullOrEmpty(value))
+        {
+            Write(0);
+            return;
+        }
+
         var bytes = encoding.GetBytes(value);
         Write(bytes.Length);
         Write(bytes);

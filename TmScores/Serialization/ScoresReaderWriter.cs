@@ -44,14 +44,15 @@ public sealed class ScoresReaderWriter
 
     public void Boolean(ref bool value) => value = Boolean(value);
 
-    public string String(string value = "")
+    [return: NotNullIfNotNull(nameof(value))]
+    public string? String(string? value = null)
     {
         value = Reader?.ReadString() ?? value;
         Writer?.Write(value);
         return value;
     }
 
-    public void String(ref string value) => value = String(value);
+    public void String([NotNullIfNotNull(nameof(value))] ref string? value) => value = String(value);
 
     public int Int32(int value = default)
     {
