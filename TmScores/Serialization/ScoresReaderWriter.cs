@@ -8,6 +8,7 @@ public sealed class ScoresReaderWriter
     internal ScoresWriter? Writer { get; }
 
     internal bool IsGeneralScores { get; set; }
+    internal int Version { get; set; }
 
     public ScoresReaderWriter(Stream stream, bool writing, bool leaveOpen = true)
     {
@@ -194,17 +195,21 @@ public sealed class ScoresReaderWriter
 
     public int[] IntBuffer(IEnumerable<int> value, int length, int sizeOfInt)
     {
-        value = Reader?.ReadIntBuffer(length, sizeOfInt) ?? value;
+        if (Reader is not null)
+        {
+            return Reader.ReadIntBuffer(length, sizeOfInt);
+        }
+
         Writer?.WriteIntBuffer(value, sizeOfInt);
-        return (int[])value;
+        return value.ToArray();
     }
 
-    public RecordUnit<uint>[] RecordsBuffer(RecordUnit<uint>[] value)
+    public RecordUnit<int>[] RecordsBuffer(RecordUnit<int>[] value)
     {
         value = Reader?.ReadRecordsBuffer() ?? value;
         Writer?.WriteRecordsBuffer(value);
         return value;
     }
 
-    public void RecordsBuffer([NotNullIfNotNull(nameof(value))] ref RecordUnit<uint>[] value) => value = RecordsBuffer(value);
+    public void RecordsBuffer([NotNullIfNotNull(nameof(value))] ref RecordUnit<int>[] value) => value = RecordsBuffer(value);
 }

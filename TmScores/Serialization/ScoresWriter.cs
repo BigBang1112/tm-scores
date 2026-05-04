@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Buffers.Binary;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace TmScores.Serialization;
@@ -105,16 +106,24 @@ internal sealed class ScoresWriter(Stream output, bool leaveOpen = true)
         }
     }
 
-    public void WriteRecordsBuffer(RecordUnit<uint>[] array)
+    public void WriteRecordsBuffer(RecordUnit<int>[] array)
     {
-        var sizeOfScoreInt = array.Max(x => x.Score) switch
+        if (array.Length == 0)
+        {
+            WriteSizesMask2(1, 1);
+            Write((byte)0);
+            Write(0);
+            return;
+        }
+
+        var sizeOfScoreInt = array.Max(x => (uint)x.Score) switch
         {
             <= byte.MaxValue => 1,
             <= ushort.MaxValue => 2,
             _ => 4
         };
 
-        var sizeOfCountsInt = array.Max(x => x.Count) switch
+        var sizeOfCountsInt = array.Max(x => (uint)x.Count) switch
         {
             <= byte.MaxValue => 1,
             <= ushort.MaxValue => 2,
@@ -125,18 +134,21 @@ internal sealed class ScoresWriter(Stream output, bool leaveOpen = true)
         Write((byte)0); // CompareAsc if 1? otherwise CompareDesc
         Write(array.Length);
 
-        Span<byte> scoreData = stackalloc byte[array.Length * sizeOfScoreInt];
-        Span<byte> countsData = stackalloc byte[array.Length * sizeOfCountsInt];
+        Span<byte> scoreSpan = new byte[array.Length * sizeOfScoreInt];
+        Span<byte> countSpan = new byte[array.Length * sizeOfCountsInt];
+        
+        Span<byte> temp4Bytes = stackalloc byte[4];
 
         for (var i = 0; i < array.Length; i++)
         {
-            var scoreBytes = BitConverter.GetBytes(array[i].Score);
-            var countBytes = BitConverter.GetBytes(array[i].Count);
-            scoreBytes.AsSpan(0, sizeOfScoreInt).CopyTo(scoreData.Slice(i * sizeOfScoreInt, sizeOfScoreInt));
-            countBytes.AsSpan(0, sizeOfCountsInt).CopyTo(countsData.Slice(i * sizeOfCountsInt, sizeOfCountsInt));
+            BinaryPrimitives.WriteInt32LittleEndian(temp4Bytes, array[i].Score);
+            temp4Bytes.Slice(0, sizeOfScoreInt).CopyTo(scoreSpan.Slice(i * sizeOfScoreInt, sizeOfScoreInt));
+
+            BinaryPrimitives.WriteUInt32LittleEndian(temp4Bytes, (uint)array[i].Count);
+            temp4Bytes.Slice(0, sizeOfCountsInt).CopyTo(countSpan.Slice(i * sizeOfCountsInt, sizeOfCountsInt));
         }
 
-        Write(scoreData);
-        Write(countsData);
+        Write(scoreSpan);
+        Write(countSpan);
     }
 }

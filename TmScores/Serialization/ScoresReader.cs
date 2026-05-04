@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Buffers.Binary;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -110,7 +111,7 @@ internal sealed class ScoresReader(Stream input, bool leaveOpen = true)
         return array;
     }
 
-    public RecordUnit<uint>[] ReadRecordsBuffer()
+    public RecordUnit<int>[] ReadRecordsBuffer()
     {
         var (sizeOfScoreInt, sizeOfCountsInt) = ReadSizesMask2();
 
@@ -123,15 +124,28 @@ internal sealed class ScoresReader(Stream input, bool leaveOpen = true)
         Span<byte> scoreData = ReadBytes(recordUnitCount * sizeOfScoreInt);
         Span<byte> countsData = ReadBytes(recordUnitCount * sizeOfCountsInt);
 
-        var array = new RecordUnit<uint>[recordUnitCount];
+        var array = new RecordUnit<int>[recordUnitCount];
 
         for (var i = 0; i < recordUnitCount; i++)
         {
             var scoreSlice = scoreData.Slice(i * sizeOfScoreInt, sizeOfScoreInt);
             var countSlice = countsData.Slice(i * sizeOfCountsInt, sizeOfCountsInt);
 
-            var score = BitConverter.ToUInt32(scoreSlice);
-            var count = BitConverter.ToInt32(countSlice);
+            var score = sizeOfScoreInt switch
+            {
+                1 => scoreSlice[0],
+                2 => BinaryPrimitives.ReadUInt16LittleEndian(scoreSlice),
+                4 => BinaryPrimitives.ReadInt32LittleEndian(scoreSlice),
+                _ => throw new FormatException($"Invalid score byte size: {sizeOfScoreInt}")
+            };
+
+            var count = sizeOfCountsInt switch
+            {
+                1 => countsData[i],
+                2 => BinaryPrimitives.ReadUInt16LittleEndian(countSlice),
+                4 => BinaryPrimitives.ReadInt32LittleEndian(countSlice),
+                _ => throw new FormatException($"Invalid count byte size: {sizeOfCountsInt}")
+            };
 
             array[i] = new(score, count);
         }
