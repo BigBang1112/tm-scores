@@ -16,7 +16,7 @@ public sealed class Scores : IReadableWritable
     {
         rw.String(ref leagueName);
 
-        var hasRecordUnits = rw.IsGeneralScores || rw.Boolean(skillpoints.Length > 0, asByte: true);
+        var hasRecordUnits = rw.IsGeneralScores || rw.Boolean(skillpoints.Length > 0);
 
         if (hasRecordUnits)
         {

@@ -9,23 +9,6 @@ internal sealed class ScoresWriter(Stream output, bool leaveOpen = true)
 {
     private static readonly Encoding encoding = Encoding.UTF8;
 
-    public override void Write(bool value)
-    {
-        Write(value ? 1 : 0);
-    }
-
-    public void Write(bool value, bool asByte)
-    {
-        if (asByte)
-        {
-            Write((byte)(value ? 1 : 0));
-        }
-        else
-        {
-            Write(value);
-        }
-    }
-
     public override void Write(string value)
     {
         var bytes = encoding.GetBytes(value);

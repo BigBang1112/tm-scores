@@ -10,18 +10,6 @@ internal sealed class ScoresReader(Stream input, bool leaveOpen = true)
 {
     private static readonly Encoding encoding = Encoding.UTF8;
 
-    public override bool ReadBoolean()
-    {
-        return ReadInt32() != 0;
-    }
-    
-    public bool ReadBoolean(bool asByte)
-    {
-        return asByte
-            ? ReadByte() != 0
-            : ReadBoolean();
-    }
-
     public override string ReadString()
     {
         return ReadString(ReadInt32());

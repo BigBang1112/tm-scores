@@ -35,14 +35,14 @@ public sealed class ScoresReaderWriter
 
     public void Byte(ref byte value) => value = Byte(value);
 
-    public bool Boolean(bool value = default, bool asByte = false)
+    public bool Boolean(bool value = default)
     {
-        value = Reader?.ReadBoolean(asByte) ?? value;
-        Writer?.Write(value, asByte);
+        value = Reader?.ReadBoolean() ?? value;
+        Writer?.Write(value);
         return value;
     }
 
-    public void Boolean(ref bool value, bool asByte = false) => value = Boolean(value, asByte);
+    public void Boolean(ref bool value) => value = Boolean(value);
 
     public string String(string value = "")
     {
