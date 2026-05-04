@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="TmScores.Showcase/TmScores.Showcase/TmScores.Showcase.csproj" Id="06b55f24-ae19-48f6-ba8a-695cbf77490f" />
+  <Project Path="TmScores.Showcase/TmScores.Showcase.csproj" />
   <Project Path="TmScores.Tests/TmScores.Tests.csproj" />
   <Project Path="TmScores/TmScores.csproj" />
 </Solution>
