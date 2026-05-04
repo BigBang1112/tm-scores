@@ -5,5 +5,5 @@ public sealed record HighScore(
     int Score, 
     string Login, 
     string Nickname, 
-    string FilePath = "", 
-    string GhostUrl = "");
+    string? FilePath = null, 
+    string? GhostUrl = null);

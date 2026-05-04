@@ -95,8 +95,8 @@ public sealed class Scores : IReadableWritable
             for (var i = 0; i < highScoreCount; i++)
             {
                 highScores[i] = new(ranks[i], times[i], logins[i], nicknames[i],
-                    filePaths.Length > 0 ? filePaths[i] : string.Empty,
-                    ghostUrls.Length > 0 ? ghostUrls[i] : string.Empty);
+                    filePaths.Length > 0 ? filePaths[i] : null,
+                    ghostUrls.Length > 0 ? ghostUrls[i] : null);
             }
         }
     }

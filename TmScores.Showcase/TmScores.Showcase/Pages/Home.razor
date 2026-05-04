@@ -1,0 +1,38 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<ReuContainer>
+    <div class="scores">
+        <ReuUploadButton OnUpload="UploadCampaignScores" Accept=".gz">CampaignScores</ReuUploadButton>
+        <ReuUploadButton OnUpload="UploadChallengeScores" Accept=".gz">ChallengeScores</ReuUploadButton>
+        <ReuUploadButton OnUpload="UploadGeneralScores" Accept=".gz">GeneralScores</ReuUploadButton>
+    </div>
+    <div style="margin-top: 1rem; overflow: auto">
+        <ReuObjectTree Value="scores" IsExpandedByDefault="true"></ReuObjectTree>
+    </div>
+
+    <ReuTooltip IsGlobal="true"></ReuTooltip>
+</ReuContainer>
+
+@code {
+    private object? scores;
+
+    private void UploadCampaignScores(UploadEventArgs args)
+    {
+        using var ms = new MemoryStream(args.Data);
+        scores = CampaignScores.Deserialize(ms);
+    }
+
+    private void UploadChallengeScores(UploadEventArgs args)
+    {
+        using var ms = new MemoryStream(args.Data);
+        scores = ChallengeScores.Deserialize(ms);
+    }
+
+    private void UploadGeneralScores(UploadEventArgs args)
+    {
+        using var ms = new MemoryStream(args.Data);
+        scores = GeneralScores.Deserialize(ms);
+    }
+}
