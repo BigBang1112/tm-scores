@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\TmScores\TmScores.csproj" />
+      <ProjectReference Include="..\TmScores\TmScores.csproj" />
     </ItemGroup>
 
     <ItemGroup>
