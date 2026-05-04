@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="TmScores.Tests/TmScores.Tests.csproj" />
+  <Project Path="TmScores/TmScores.csproj" />
+</Solution>
