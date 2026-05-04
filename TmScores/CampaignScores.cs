@@ -50,10 +50,12 @@ public sealed class CampaignScores : IReadableWritable, ICollection<CampaignLeag
     {
         rw.Byte(ref version);
 
-        if (version != 7)
+        if (version is not 7 and not 8)
         {
             throw new NotSupportedException("Unsupported version: " + version);
         }
+
+        rw.Version = version;
 
         rw.ListReadableWritable(ref leagues, lengthPrefixAsByte: true);
     }
