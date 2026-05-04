@@ -27,19 +27,22 @@ public sealed class Scores : IReadableWritable
 
         if (rw.Writer is not null)
         {
-            sizeOfRanksInt = highScores.Max(x => x.Rank) switch
+            if (highScores.Length > 0)
             {
-                <= byte.MaxValue => 1,
-                <= ushort.MaxValue => 2,
-                _ => 4
-            };
+                sizeOfRanksInt = highScores.Max(x => x.Rank) switch
+                {
+                    <= byte.MaxValue => 1,
+                    <= ushort.MaxValue => 2,
+                    _ => 4
+                };
 
-            sizeOfScoresInt = highScores.Max(x => x.Score) switch
-            {
-                <= byte.MaxValue => 1,
-                <= ushort.MaxValue => 2,
-                _ => 4
-            };
+                sizeOfScoresInt = highScores.Max(x => x.Score) switch
+                {
+                    <= byte.MaxValue => 1,
+                    <= ushort.MaxValue => 2,
+                    _ => 4
+                };
+            }
 
             rw.Writer.WriteSizesMask2(sizeOfRanksInt, sizeOfScoresInt);
         }

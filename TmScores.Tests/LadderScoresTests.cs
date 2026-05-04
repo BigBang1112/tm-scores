@@ -1,4 +1,6 @@
-﻿namespace TmScores.Tests;
+﻿using KellermanSoftware.CompareNetObjects;
+
+namespace TmScores.Tests;
 
 public class LadderScoresTests
 {
@@ -17,6 +19,23 @@ public class LadderScoresTests
         Assert.Equal(expected: 385442, actual: scores[1].PlayerCount);
         Assert.Equal(expected: "World|Czech republic|Jihoceský kraj", actual: scores[2].Name);
         Assert.Equal(expected: 21550, actual: scores[2].PlayerCount);
+    }
+
+    [Theory]
+    [InlineData("Multi104085.gz")]
+    public void Serialization_Equality(string fileName)
+    {
+        var filePath = Path.Combine("Files", fileName);
+
+        var inputScores = LadderScores.Deserialize(filePath);
+
+        using var ms = new MemoryStream();
+        inputScores.Serialize(ms);
+        ms.Position = 0;
+
+        var outputScores = LadderScores.Deserialize(ms);
+
+        inputScores.ShouldCompare(outputScores, compareConfig: new() { MaxDifferences = 10 });
     }
 
     [Fact]

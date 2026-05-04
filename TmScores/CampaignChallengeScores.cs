@@ -13,6 +13,13 @@ public sealed class CampaignChallengeScores : IReadableWritable, ICollection<Sco
     public int Count => challengeScores.Count;
     public bool IsReadOnly => false;
 
+    public CampaignChallengeScores() { }
+
+    public CampaignChallengeScores(string mapUid)
+    {
+        this.mapUid = mapUid;
+    }
+
     public void ReadWrite(ScoresReaderWriter rw)
     {
         rw.String(ref mapUid);

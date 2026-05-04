@@ -13,6 +13,13 @@ public sealed class CampaignMedalLeague : IReadableWritable, ICollection<Campaig
     public int Count => playModes.Count;
     public bool IsReadOnly => false;
 
+    public CampaignMedalLeague() { }
+
+    public CampaignMedalLeague(string name)
+    {
+        this.name = name;
+    }
+
     public void ReadWrite(ScoresReaderWriter rw)
     {
         rw.String(ref name);

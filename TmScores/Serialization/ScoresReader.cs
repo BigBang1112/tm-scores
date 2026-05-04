@@ -101,14 +101,26 @@ internal sealed class ScoresReader(Stream input, bool leaveOpen = true)
         {
             array[i] = sizeOfInt switch
             {
-                1 => ReadByte(),
-                2 => ReadInt16(),
+                1 => ReadByteSpecialized(),
+                2 => ReadUInt16Specialized(),
                 4 => ReadInt32(),
                 _ => throw new ArgumentException($"Invalid sizeOfInt: {sizeOfInt}"),
             };
         }
 
         return array;
+
+        int ReadByteSpecialized()
+        {
+            var value = ReadByte();
+            return (sbyte)value == -2 ? -2 : value;
+        }
+
+        int ReadUInt16Specialized()
+        {
+            var value = ReadUInt16();
+            return (short)value == -2 ? -2 : value;
+        }
     }
 
     public RecordUnit<int>[] ReadRecordsBuffer()

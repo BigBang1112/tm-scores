@@ -95,7 +95,7 @@ internal sealed class ScoresWriter(Stream output, bool leaveOpen = true)
                     Write((byte)value);
                     break;
                 case 2:
-                    Write((short)value);
+                    Write((ushort)value);
                     break;
                 case 4:
                     Write(value);
@@ -141,7 +141,7 @@ internal sealed class ScoresWriter(Stream output, bool leaveOpen = true)
 
         for (var i = 0; i < array.Length; i++)
         {
-            BinaryPrimitives.WriteInt32LittleEndian(temp4Bytes, array[i].Score);
+            BinaryPrimitives.WriteUInt32LittleEndian(temp4Bytes, (uint)array[i].Score);
             temp4Bytes.Slice(0, sizeOfScoreInt).CopyTo(scoreSpan.Slice(i * sizeOfScoreInt, sizeOfScoreInt));
 
             BinaryPrimitives.WriteUInt32LittleEndian(temp4Bytes, (uint)array[i].Count);

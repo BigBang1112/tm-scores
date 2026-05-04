@@ -1,9 +1,11 @@
-﻿namespace TmScores.Tests;
+﻿using KellermanSoftware.CompareNetObjects;
+
+namespace TmScores.Tests;
 
 public class GeneralScoresTests
 {
     [Fact]
-    public void Deserialize_Zone()
+    public void Deserialize_TMF_Zone()
     {
         var filePath = Path.Combine("Files", "General104085.gz");
 
@@ -16,7 +18,7 @@ public class GeneralScoresTests
     }
 
     [Fact]
-    public void Deserialize_Group()
+    public void Deserialize_TMF_Group()
     {
         var filePath = Path.Combine("Files", "General123213.gz");
 
@@ -26,5 +28,25 @@ public class GeneralScoresTests
         Assert.Equal(expected: "$03c1cc Solo", actual: scores[0].LeagueName);
         Assert.Equal(expected: 58, actual: scores[0].Skillpoints.Length);
         Assert.Equal(expected: 10, actual: scores[0].HighScores.Length);
+    }
+
+    [Theory]
+    [InlineData("General104085.gz")]
+    [InlineData("General123213.gz")]
+    [InlineData("General100589.gz")]
+    [InlineData("General129055.gz")]
+    public void Serialization_Equality(string fileName)
+    {
+        var filePath = Path.Combine("Files", fileName);
+
+        var inputScores = GeneralScores.Deserialize(filePath);
+
+        using var ms = new MemoryStream();
+        inputScores.Serialize(ms);
+        ms.Position = 0;
+
+        var outputScores = GeneralScores.Deserialize(ms);
+
+        inputScores.ShouldCompare(outputScores, compareConfig: new() { MaxDifferences = 10 });
     }
 }

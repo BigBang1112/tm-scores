@@ -3,10 +3,10 @@ using TmScores.Serialization;
 
 namespace TmScores;
 
-public sealed class CampaignMedalPlayMode : IReadableWritable, IReadOnlyCollection<RecordUnit<uint>>
+public sealed class CampaignMedalPlayMode : IReadableWritable, IReadOnlyCollection<RecordUnit<int>>
 {
     private PlayMode playMode;
-    private RecordUnit<uint>[] medals = [];
+    private RecordUnit<int>[] medals = [];
 
     public PlayMode PlayMode { get => playMode; set => playMode = value; }
 
@@ -14,7 +14,7 @@ public sealed class CampaignMedalPlayMode : IReadableWritable, IReadOnlyCollecti
 
     public CampaignMedalPlayMode() { }
 
-    public CampaignMedalPlayMode(PlayMode playMode, RecordUnit<uint>[] medals)
+    public CampaignMedalPlayMode(PlayMode playMode, RecordUnit<int>[] medals)
     {
         this.playMode = playMode;
         this.medals = medals;
@@ -26,9 +26,9 @@ public sealed class CampaignMedalPlayMode : IReadableWritable, IReadOnlyCollecti
         rw.RecordsBuffer(ref medals);
     }
 
-    public RecordUnit<uint> this[int index] => medals[index];
+    public RecordUnit<int> this[int index] => medals[index];
 
-    public IEnumerator<RecordUnit<uint>> GetEnumerator() => ((IEnumerable<RecordUnit<uint>>)medals).GetEnumerator();
+    public IEnumerator<RecordUnit<int>> GetEnumerator() => ((IEnumerable<RecordUnit<int>>)medals).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator()
     {
