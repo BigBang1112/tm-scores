@@ -11,6 +11,7 @@ public sealed class Scores : IReadableWritable
     public string LeagueName { get => leagueName; set => leagueName = value; }
     public RecordUnit<int>[] Skillpoints { get => skillpoints; set => skillpoints = value; }
     public HighScore[] HighScores { get => highScores; set => highScores = value; }
+    public int TotalCount => skillpoints.Sum(x => x.Count);
 
     public void ReadWrite(ScoresReaderWriter rw)
     {

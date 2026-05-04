@@ -11,6 +11,7 @@ public sealed class CampaignMedalPlayMode : IReadableWritable, IReadOnlyCollecti
     public PlayMode PlayMode { get => playMode; set => playMode = value; }
 
     public int Count => medals.Length;
+    public int PlayerCount => medals.Sum(x => x.Count);
 
     public CampaignMedalPlayMode() { }
 

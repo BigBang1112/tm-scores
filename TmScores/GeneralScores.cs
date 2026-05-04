@@ -10,7 +10,6 @@ public sealed class GeneralScores : IReadableWritable, ICollection<Scores>
     private List<Scores> leagues = [];
 
     public byte Version { get => version; set => version = value; }
-    public List<Scores> Leagues { get => leagues; set => leagues = value; }
 
     public int Count => leagues.Count;
     public bool IsReadOnly => false;
