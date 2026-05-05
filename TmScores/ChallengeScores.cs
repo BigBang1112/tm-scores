@@ -4,12 +4,13 @@ using TmScores.Serialization;
 
 namespace TmScores;
 
-public sealed class ChallengeScores : IReadableWritable, ICollection<Scores>
+public sealed class ChallengeScores : IScores, ICollection<Scores>
 {
     private List<Scores> challengeScores = [];
 
     public int Count => challengeScores.Count;
-    public bool IsReadOnly => false;
+
+    bool ICollection<Scores>.IsReadOnly => false;
 
     public static ChallengeScores Deserialize(string fileName)
     {

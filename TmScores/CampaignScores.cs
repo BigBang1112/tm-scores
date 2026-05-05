@@ -4,7 +4,7 @@ using TmScores.Serialization;
 
 namespace TmScores;
 
-public sealed class CampaignScores : IReadableWritable, ICollection<CampaignLeague>
+public sealed class CampaignScores : IScores, ICollection<CampaignLeague>
 {
     private byte version = 7;
     private List<CampaignLeague> leagues = [];
@@ -12,7 +12,8 @@ public sealed class CampaignScores : IReadableWritable, ICollection<CampaignLeag
     public byte Version { get => version; set => version = value; }
 
     public int Count => leagues.Count;
-    public bool IsReadOnly => false;
+
+    bool ICollection<CampaignLeague>.IsReadOnly => false;
 
     public static CampaignScores Deserialize(string fileName)
     {
@@ -39,7 +40,7 @@ public sealed class CampaignScores : IReadableWritable, ICollection<CampaignLeag
 
     public void Serialize(Stream stream)
     {
-        using var gz = new GZipStream(stream, CompressionMode.Compress, leaveOpen: true);
+        using var gz = new GZipStream(stream, CompressionLevel.SmallestSize, leaveOpen: true);
         using var w = new ScoresWriter(gz);
         var rw = new ScoresReaderWriter(w);
 

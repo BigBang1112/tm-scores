@@ -4,7 +4,7 @@ using TmScores.Serialization;
 
 namespace TmScores;
 
-public sealed class LadderScores : IReadableWritable, ICollection<LadderLeague>
+public sealed class LadderScores : IScores, ICollection<LadderLeague>
 {
     private byte version = 1;
     private List<LadderLeague> leagues = [];
@@ -12,7 +12,8 @@ public sealed class LadderScores : IReadableWritable, ICollection<LadderLeague>
     public byte Version { get => version; set => version = value; }
 
     public int Count => leagues.Count;
-    public bool IsReadOnly => false;
+
+    bool ICollection<LadderLeague>.IsReadOnly => false;
 
     public static LadderScores Deserialize(string fileName)
     {

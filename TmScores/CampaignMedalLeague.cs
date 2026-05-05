@@ -11,7 +11,8 @@ public sealed class CampaignMedalLeague : IReadableWritable, ICollection<Campaig
     public string Name { get => name; set => name = value; }
 
     public int Count => playModes.Count;
-    public bool IsReadOnly => false;
+
+    bool ICollection<CampaignMedalPlayMode>.IsReadOnly => false;
 
     public CampaignMedalLeague() { }
 

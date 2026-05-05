@@ -4,7 +4,7 @@ using TmScores.Serialization;
 
 namespace TmScores;
 
-public sealed class GeneralScores : IReadableWritable, ICollection<Scores>
+public sealed class GeneralScores : IScores, ICollection<Scores>
 {
     private byte version = 5;
     private List<Scores> leagues = [];
@@ -12,7 +12,8 @@ public sealed class GeneralScores : IReadableWritable, ICollection<Scores>
     public byte Version { get => version; set => version = value; }
 
     public int Count => leagues.Count;
-    public bool IsReadOnly => false;
+
+    bool ICollection<Scores>.IsReadOnly => false;
 
     public static GeneralScores Deserialize(string fileName)
     {

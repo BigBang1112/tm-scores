@@ -38,6 +38,6 @@ public sealed class CampaignMedalPlayMode : IReadableWritable, IReadOnlyCollecti
 
     public override string ToString()
     {
-        return $"CampaignMedalPlayMode ({playMode}, {medals.Length} medals)";
+        return $"CampaignMedalPlayMode ({playMode}, {medals.Length} unique medal counts)";
     }
 }

@@ -11,7 +11,8 @@ public sealed class CampaignChallengeScores : IReadableWritable, ICollection<Sco
     public string MapUid { get => mapUid; set => mapUid = value; }
 
     public int Count => challengeScores.Count;
-    public bool IsReadOnly => false;
+
+    bool ICollection<Scores>.IsReadOnly => false;
 
     public CampaignChallengeScores() { }
 
