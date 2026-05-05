@@ -2,6 +2,15 @@ body {
     background-color: #111;
 }
 
+ul {
+    margin-top: 0.3rem;
+    margin-bottom: 0.7rem;
+}
+
+    ul ul {
+        font-size: 0.8rem;
+    }
+
 .buttons {
     display: flex;
     flex-wrap: wrap;
