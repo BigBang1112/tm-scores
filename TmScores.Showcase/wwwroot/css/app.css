@@ -2,14 +2,30 @@ body {
     background-color: #111;
 }
 
-.scores {
+.buttons {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
 }
 
-    .scores > .reu-button {
+    .buttons > .reu-button {
         flex: 1;
     }
+
+.file-name {
+    margin-top: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.object-tree {
+    margin: 1rem 0;
+    overflow: auto;
+}
+
+.export-button {
+    width: 100% !important;
+}
 
 #app {
     min-height: 100vh;

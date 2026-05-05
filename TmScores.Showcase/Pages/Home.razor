@@ -1,45 +1,162 @@
 ﻿@page "/"
+@using System.Text.Json
+@using System.Text
+@using TmEssentials
+@using TmEssentials.Razor
+
+@inject IJSRuntime JS
 
 <PageTitle>TmScores</PageTitle>
 
 <ReuContainer>
-    <div class="scores">
+    <div class="buttons">
         <ReuUploadButton OnUpload="UploadCampaignScores" Accept=".gz">CampaignScores</ReuUploadButton>
         <ReuUploadButton OnUpload="UploadChallengeScores" Accept=".gz">ChallengeScores</ReuUploadButton>
         <ReuUploadButton OnUpload="UploadGeneralScores" Accept=".gz">GeneralScores</ReuUploadButton>
         <ReuUploadButton OnUpload="UploadLadderScores" Accept=".gz">LadderScores</ReuUploadButton>
     </div>
-    <div style="margin-top: 1rem; overflow: auto">
-        <ReuObjectTree Value="scores" IsExpandedByDefault="true"></ReuObjectTree>
+    <InputText @bind-Value="fileName" class="file-name"></InputText>
+    <div class="object-tree">
+        <ReuObjectTree Value="scores"
+                       IsExpandedByDefault="true"
+                       VisualizationProvider="ProvideVisualization"></ReuObjectTree>
     </div>
+
+    @if (scores is not null)
+    {
+        <div class="buttons">
+            <ReuButton OnClick="ExportToGzipAsync" CssClass="export-button">Export to .gz</ReuButton>
+            <ReuButton OnClick="ExportToJsonAsync" CssClass="export-button">Export to .json</ReuButton>
+            <ReuButton OnClick="ExportAsRawDataAsync" CssClass="export-button">Export as raw data</ReuButton>
+        </div>
+    }
 
     <ReuTooltip IsGlobal="true"></ReuTooltip>
 </ReuContainer>
 
 @code {
-    private object? scores;
+    private static readonly JsonSerializerOptions jsonSerializerOptions = new()
+    {
+        Converters =
+        {
+            new JsonRecordUnitInt32Converter()
+        }
+    };
+
+    private IScores? scores;
+    private string? fileName;
 
     private void UploadCampaignScores(UploadEventArgs args)
     {
+        fileName = Path.GetFileNameWithoutExtension(args.FileName);
+
         using var ms = new MemoryStream(args.Data);
         scores = CampaignScores.Deserialize(ms);
     }
 
     private void UploadChallengeScores(UploadEventArgs args)
     {
+        fileName = Path.GetFileNameWithoutExtension(args.FileName);
+
         using var ms = new MemoryStream(args.Data);
         scores = ChallengeScores.Deserialize(ms);
     }
 
     private void UploadGeneralScores(UploadEventArgs args)
     {
+        fileName = Path.GetFileNameWithoutExtension(args.FileName);
+
         using var ms = new MemoryStream(args.Data);
         scores = GeneralScores.Deserialize(ms);
     }
 
     private void UploadLadderScores(UploadEventArgs args)
     {
+        fileName = Path.GetFileNameWithoutExtension(args.FileName);
+
         using var ms = new MemoryStream(args.Data);
         scores = LadderScores.Deserialize(ms);
+    }
+
+    private RenderFragment? ProvideVisualization(object? value)
+    {
+        if (value is ReuObjectTreeMember member
+            && member.Property.DeclaringType == typeof(HighScore)
+            && member.Property.Name == "Nickname")
+        {
+            return builder =>
+            {
+                builder.OpenComponent(0, typeof(FormattedText));
+                builder.AddAttribute(1, "Text", member.Value);
+                builder.CloseComponent();
+            };
+        }
+
+        if (value is ReuObjectTreeItem item && item.Value is HighScore highScore)
+        {
+            return builder =>
+            {
+                builder.AddMarkupContent(0, $"{highScore.Rank}) {(highScore.Score == -2 ? default(TimeInt32?) : new TimeInt32(highScore.Score))} by ");
+                builder.OpenComponent(1, typeof(FormattedText));
+                builder.AddAttribute(2, "Text", highScore.Nickname);
+                builder.CloseComponent();
+
+                if (!string.IsNullOrEmpty(highScore.GhostUrl))
+                {
+                    builder.AddMarkupContent(3, $" <small><a href=\"{highScore.GhostUrl}\" target=\"_blank\" onclick=\"event.stopPropagation()\">(download)</a></small>");
+                }
+            };
+        }
+
+        return null;
+    }
+
+    private async Task ExportToGzipAsync()
+    {
+        if (scores is null)
+        {
+            return;
+        }
+
+        using var stream = new MemoryStream();
+        scores.Serialize(stream);
+        stream.Seek(0, SeekOrigin.Begin);
+
+        using var streamRef = new DotNetStreamReference(stream);
+
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName + ".gz", streamRef);
+    }
+
+    private async Task ExportToJsonAsync()
+    {
+        if (scores is null)
+        {
+            return;
+        }
+
+        using var stream = new MemoryStream();
+        await JsonSerializer.SerializeAsync(stream, scores, scores.GetType(), jsonSerializerOptions);
+        stream.Seek(0, SeekOrigin.Begin);
+
+        using var streamRef = new DotNetStreamReference(stream);
+
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName + ".json", streamRef);
+    }
+
+    private async Task ExportAsRawDataAsync()
+    {
+        if (scores is null)
+        {
+            return;
+        }
+
+        using var stream = new MemoryStream();
+        var rw = new Serialization.ScoresReaderWriter(stream, writing: true);
+        scores.ReadWrite(rw);
+        stream.Seek(0, SeekOrigin.Begin);
+
+        using var streamRef = new DotNetStreamReference(stream);
+
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName + ".dat", streamRef);
     }
 }
