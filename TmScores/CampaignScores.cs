@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Buffers.Binary;
+using System.Collections;
 using System.IO.Compression;
 using TmScores.Serialization;
 
@@ -11,7 +12,16 @@ public sealed class CampaignScores : IScores, ICollection<CampaignLeague>
 
     public byte Version { get => version; set => version = value; }
 
+    public DateTimeOffset? Timestamp { get; }
+
     public int Count => leagues.Count;
+
+    public CampaignScores() { }
+
+    private CampaignScores(DateTimeOffset? timestamp)
+    {
+        Timestamp = timestamp;
+    }
 
     bool ICollection<CampaignLeague>.IsReadOnly => false;
 
@@ -23,11 +33,15 @@ public sealed class CampaignScores : IScores, ICollection<CampaignLeague>
 
     public static CampaignScores Deserialize(Stream stream)
     {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        var timestamp = DeserializationUtils.GetGzipTimestamp(stream);
+
         using var gz = new GZipStream(stream, CompressionMode.Decompress, leaveOpen: true);
         using var r = new ScoresReader(gz);
         var rw = new ScoresReaderWriter(r);
 
-        var scores = new CampaignScores();
+        var scores = new CampaignScores(timestamp);
         scores.ReadWrite(rw);
         return scores;
     }

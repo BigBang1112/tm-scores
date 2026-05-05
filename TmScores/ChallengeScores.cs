@@ -8,9 +8,18 @@ public sealed class ChallengeScores : IScores, ICollection<Scores>
 {
     private List<Scores> challengeScores = [];
 
+    public DateTimeOffset? Timestamp { get; }
+
     public int Count => challengeScores.Count;
 
     bool ICollection<Scores>.IsReadOnly => false;
+
+    public ChallengeScores() { }
+
+    private ChallengeScores(DateTimeOffset? timestamp)
+    {
+        Timestamp = timestamp;
+    }
 
     public static ChallengeScores Deserialize(string fileName)
     {
@@ -20,11 +29,15 @@ public sealed class ChallengeScores : IScores, ICollection<Scores>
 
     public static ChallengeScores Deserialize(Stream stream)
     {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        var timestamp = DeserializationUtils.GetGzipTimestamp(stream);
+
         using var gz = new GZipStream(stream, CompressionMode.Decompress, leaveOpen: true);
         using var r = new ScoresReader(gz);
         var rw = new ScoresReaderWriter(r);
 
-        var scores = new ChallengeScores();
+        var scores = new ChallengeScores(timestamp);
         scores.ReadWrite(rw);
         return scores;
     }

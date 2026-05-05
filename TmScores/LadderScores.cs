@@ -11,9 +11,18 @@ public sealed class LadderScores : IScores, ICollection<LadderLeague>
 
     public byte Version { get => version; set => version = value; }
 
+    public DateTimeOffset? Timestamp { get; }
+
     public int Count => leagues.Count;
 
     bool ICollection<LadderLeague>.IsReadOnly => false;
+
+    public LadderScores() { }
+
+    private LadderScores(DateTimeOffset? timestamp)
+    {
+        Timestamp = timestamp;
+    }
 
     public static LadderScores Deserialize(string fileName)
     {
@@ -23,11 +32,15 @@ public sealed class LadderScores : IScores, ICollection<LadderLeague>
 
     public static LadderScores Deserialize(Stream stream)
     {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        var timestamp = DeserializationUtils.GetGzipTimestamp(stream);
+
         using var gz = new GZipStream(stream, CompressionMode.Decompress, leaveOpen: true);
         using var r = new ScoresReader(gz);
         var rw = new ScoresReaderWriter(r);
 
-        var scores = new LadderScores();
+        var scores = new LadderScores(timestamp);
         scores.ReadWrite(rw);
         return scores;
     }

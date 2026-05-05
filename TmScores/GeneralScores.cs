@@ -11,9 +11,18 @@ public sealed class GeneralScores : IScores, ICollection<Scores>
 
     public byte Version { get => version; set => version = value; }
 
+    public DateTimeOffset? Timestamp { get; }
+
     public int Count => leagues.Count;
 
     bool ICollection<Scores>.IsReadOnly => false;
+
+    public GeneralScores() { }
+
+    private GeneralScores(DateTimeOffset? timestamp)
+    {
+        Timestamp = timestamp;
+    }
 
     public static GeneralScores Deserialize(string fileName)
     {
@@ -23,6 +32,10 @@ public sealed class GeneralScores : IScores, ICollection<Scores>
 
     public static GeneralScores Deserialize(Stream stream)
     {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        var timestamp = DeserializationUtils.GetGzipTimestamp(stream);
+
         using var gz = new GZipStream(stream, CompressionMode.Decompress, leaveOpen: true);
         using var r = new ScoresReader(gz);
         var rw = new ScoresReaderWriter(r)
@@ -30,7 +43,7 @@ public sealed class GeneralScores : IScores, ICollection<Scores>
             IsGeneralScores = true
         };
 
-        var scores = new GeneralScores();
+        var scores = new GeneralScores(timestamp);
         scores.ReadWrite(rw);
         return scores;
     }
