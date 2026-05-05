@@ -76,6 +76,7 @@ public class CampaignScoresTests
     [InlineData("TMStadium100589.gz")]
     [InlineData("TMStadium129055.gz")]
     [InlineData("TMValley104088.gz")]
+    [InlineData("LTMCanyon443.gz")]
     public void Serialization_Equality(string fileName)
     {
         var filePath = Path.Combine("Files", fileName);
