@@ -32,15 +32,15 @@ public sealed class Scores : IReadableWritable
             {
                 sizeOfRanksInt = highScores.Max(x => x.Rank) switch
                 {
-                    <= byte.MaxValue => 1,
-                    <= ushort.MaxValue => 2,
+                    < byte.MaxValue - 1 => 1,
+                    < ushort.MaxValue - 1 => 2,
                     _ => 4
                 };
 
                 sizeOfScoresInt = highScores.Max(x => x.Score) switch
                 {
-                    <= byte.MaxValue => 1,
-                    <= ushort.MaxValue => 2,
+                    < byte.MaxValue - 1 => 1,
+                    < ushort.MaxValue - 1 => 2,
                     _ => 4
                 };
             }

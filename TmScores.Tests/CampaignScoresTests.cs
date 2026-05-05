@@ -72,8 +72,10 @@ public class CampaignScoresTests
     [InlineData("UnitedRace104085.gz")]
     [InlineData("UnitedRace123213.gz")]
     [InlineData("TMCanyon132.gz")]
+    [InlineData("TMStadium443.gz")]
     [InlineData("TMStadium100589.gz")]
     [InlineData("TMStadium129055.gz")]
+    [InlineData("TMValley104088.gz")]
     public void Serialization_Equality(string fileName)
     {
         var filePath = Path.Combine("Files", fileName);
@@ -86,7 +88,7 @@ public class CampaignScoresTests
 
         var outputScores = CampaignScores.Deserialize(ms);
 
-        inputScores.ShouldCompare(outputScores, compareConfig: new() { MaxDifferences = 10 });
+        outputScores.ShouldCompare(inputScores, compareConfig: new() { MaxDifferences = 10 });
     }
 
     [Fact]

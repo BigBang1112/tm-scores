@@ -35,7 +35,7 @@ public class LadderScoresTests
 
         var outputScores = LadderScores.Deserialize(ms);
 
-        inputScores.ShouldCompare(outputScores, compareConfig: new() { MaxDifferences = 10 });
+        outputScores.ShouldCompare(inputScores, compareConfig: new() { MaxDifferences = 10 });
     }
 
     [Fact]
