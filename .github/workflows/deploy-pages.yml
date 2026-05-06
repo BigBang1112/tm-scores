@@ -44,6 +44,9 @@ jobs:
       - name: Publish
         run: dotnet publish TmScores.Showcase -c Release -o publish
         
+      - name: Add .nojekyll file
+        run: touch publish/wwwroot/.nojekyll
+        
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
