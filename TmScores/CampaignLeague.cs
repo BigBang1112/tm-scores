@@ -22,7 +22,7 @@ public sealed class CampaignLeague : IReadableWritable
     public CampaignMedalLeague GetMedalLeagueByName(string name)
     {
         return medalLeagues.FirstOrDefault(m => m.Name == name)
-            ?? throw new ArgumentException($"No league with name '{name}'.");
+            ?? throw new ArgumentException($"No league with name '{name}' found.");
     }
 
     public override string ToString()

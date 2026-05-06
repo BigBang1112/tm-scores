@@ -36,10 +36,10 @@ jobs:
       - name: Install wasm-tools
         run: dotnet workload install wasm-tools
 
-      - name: Change base in index.html and service-worker.js to repository name
+      - name: Change base in index.html and service-worker.published.js to repository name
         run: |
           sed -i 's/<base href="\/" \/>/<base href="\/${{ github.event.repository.name }}\/" \/>/g' TmScores.Showcase/wwwroot/index.html
-          sed -i 's/const base = "\/";/const base = "\/${{ github.event.repository.name }}\/";/g' TmScores.Showcase/wwwroot/service-worker.js
+          sed -i 's/const base = "\/";/const base = "\/${{ github.event.repository.name }}\/";/g' TmScores.Showcase/wwwroot/service-worker.published.js
 
       - name: Publish
         run: dotnet publish TmScores.Showcase -c Release -o publish
