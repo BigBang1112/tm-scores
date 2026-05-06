@@ -91,6 +91,7 @@ internal sealed class ScoresReader(Stream input, bool leaveOpen = true)
             {
                 1 => ReadByteSpecialized(),
                 2 => ReadUInt16Specialized(),
+                3 => ReadUInt24Specialized(),
                 4 => ReadInt32(),
                 _ => throw new ArgumentException($"Invalid sizeOfInt: {sizeOfInt}"),
             };
@@ -108,6 +109,12 @@ internal sealed class ScoresReader(Stream input, bool leaveOpen = true)
         {
             var value = ReadUInt16();
             return (short)value == -2 ? -2 : value;
+        }
+
+        int ReadUInt24Specialized()
+        {
+            var value = ReadByte() | (ReadByte() << 8) | (ReadByte() << 16);
+            return (value & 0x800000) != 0 ? value | unchecked((int)0xFF000000) : value;
         }
     }
 
@@ -135,6 +142,7 @@ internal sealed class ScoresReader(Stream input, bool leaveOpen = true)
             {
                 1 => scoreSlice[0],
                 2 => BinaryPrimitives.ReadUInt16LittleEndian(scoreSlice),
+                3 => scoreSlice[0] | (scoreSlice[1] << 8) | (scoreSlice[2] << 16),
                 4 => BinaryPrimitives.ReadInt32LittleEndian(scoreSlice),
                 _ => throw new FormatException($"Invalid score byte size: {sizeOfScoreInt}")
             };
@@ -143,6 +151,7 @@ internal sealed class ScoresReader(Stream input, bool leaveOpen = true)
             {
                 1 => countsData[i],
                 2 => BinaryPrimitives.ReadUInt16LittleEndian(countSlice),
+                3 => countSlice[0] | (countSlice[1] << 8) | (countSlice[2] << 16),
                 4 => BinaryPrimitives.ReadInt32LittleEndian(countSlice),
                 _ => throw new FormatException($"Invalid count byte size: {sizeOfCountsInt}")
             };
