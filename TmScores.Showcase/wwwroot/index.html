@@ -99,7 +99,19 @@
             URL.revokeObjectURL(url);
         }
     </script>
-    <script>navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' });</script>
+    <script>
+        navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' });
+
+        // Listen for the service worker being swapped out
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) {
+                refreshing = true;
+                // Force a hard reload of the page to grab the newest files
+                window.location.reload();
+            }
+        });
+    </script>
 </body>
 
 </html>
