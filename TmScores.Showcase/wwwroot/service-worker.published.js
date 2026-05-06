@@ -8,7 +8,7 @@ self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
 
 const cacheNamePrefix = 'offline-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
-const offlineAssetsInclude = [/\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpe?g$/, /\.gif$/, /\.ico$/, /\.blat$/, /\.dat$/, /\.webmanifest$/, /\.gz$/, /\.br$/ ];
+const offlineAssetsInclude = [/\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpe?g$/, /\.gif$/, /\.ico$/, /\.blat$/, /\.dat$/, /\.webmanifest$/ ];
 const offlineAssetsExclude = [ /^service-worker\.js$/ ];
 
 // Replace with your base path if you are hosting on a subfolder. Ensure there is a trailing '/'.
@@ -23,7 +23,20 @@ async function onInstall(event) {
     const assetsRequests = self.assetsManifest.assets
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
-        .map(asset => new Request(asset.url, { integrity: asset.hash, cache: 'no-cache' }));
+        .map(asset => {
+            // These are the file extensions your loadBootResource script intercepts
+            const isBrotliAsset = /\.(dll|wasm|pdb|dat)$/.test(asset.url);
+
+            if (isBrotliAsset) {
+                // 1. Append .br so the cache key exactly matches what loadBootResource asks for.
+                // 2. Remove the integrity property entirely. The hash in the manifest is for the 
+                //    uncompressed file. If we include it here, the browser will refuse to cache it.
+                return new Request(asset.url + '.br', { cache: 'no-cache' });
+            } else {
+                // Cache standard files (HTML, CSS, JS, JSON) normally with their integrity checks
+                return new Request(asset.url, { integrity: asset.hash, cache: 'no-cache' });
+            }
+        });
 
     await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
 
