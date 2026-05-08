@@ -24,7 +24,7 @@ async function onInstall(event) {
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
         .map(asset => {
-            // These are the file extensions your loadBootResource script intercepts
+            // These are the file extensions the loadBootResource script intercepts
             const isBrotliAsset = /\.(dll|wasm|pdb|dat)$/.test(asset.url);
 
             if (isBrotliAsset) {
