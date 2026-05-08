@@ -18,3 +18,4 @@ jobs:
       dotnet-version: 10.x.x
       workloads: wasm-tools
       project: TmScores.Showcase
+      enable-coverage: true
