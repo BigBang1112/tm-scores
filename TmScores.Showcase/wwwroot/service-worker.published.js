@@ -64,8 +64,8 @@ async function onFetch(event) {
 
     const url = new URL(event.request.url);
 
-    const directHitPaths = ['/coverage/'];
-    const isDirectHit = directHitPaths.some(path => url.pathname.startsWith(path));
+    const directHitPaths = ['coverage/'];
+    const isDirectHit = directHitPaths.some(path => url.pathname.startsWith(base + path));
 
     if (isDirectHit) {
         // Fetch directly from the network, ignoring the cache entirely
