@@ -51,9 +51,6 @@ async function onActivate(event) {
     await Promise.all(cacheKeys
         .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)
         .map(key => caches.delete(key)));
-
-    // Instantly take control of all open browser tabs
-    await self.clients.claim();
 }
 
 async function onFetch(event) {
@@ -89,7 +86,6 @@ async function onFetch(event) {
         if (cachedIndex) return cachedIndex;
     }
 
-    // Cache-First, fallback to Network
     const cachedResponse = await cache.match(event.request);
 
     // Return cached response if found, otherwise hit the network
