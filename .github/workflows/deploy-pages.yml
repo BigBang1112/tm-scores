@@ -18,43 +18,8 @@ concurrency:
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-          
-      - name: Install wasm-tools
-        run: dotnet workload install wasm-tools
-
-      - name: Change base in index.html and service-worker.published.js to repository name
-        run: |
-          sed -i 's/<base href="\/" \/>/<base href="\/${{ github.event.repository.name }}\/" \/>/g' TmScores.Showcase/wwwroot/index.html
-          sed -i 's/const base = "\/";/const base = "\/${{ github.event.repository.name }}\/";/g' TmScores.Showcase/wwwroot/service-worker.published.js
-
-      - name: Publish
-        run: dotnet publish TmScores.Showcase -c Release -o publish
-        
-      - name: Add .nojekyll file
-        run: touch publish/wwwroot/.nojekyll
-        
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: publish/wwwroot/.
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    name: Deploy to Pages
+    uses: bigbang1112/workflows/.github/workflows/deploy-pages.yml@main
+    with:
+      dotnet-version: 10.x.x
+      workloads: wasm-tools
