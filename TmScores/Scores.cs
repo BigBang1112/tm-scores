@@ -104,6 +104,6 @@ public sealed class Scores : IReadableWritable
 
     public override string ToString()
     {
-        return $"Scores ({leagueName}, {skillpoints.Length} unique records, {highScores.Length} high scores)";
+        return $"Scores ({leagueName}, {skillpoints.Length} unique scores, {highScores.Length} high scores)";
     }
 }
