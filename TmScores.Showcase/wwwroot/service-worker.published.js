@@ -57,18 +57,41 @@ async function onActivate(event) {
 }
 
 async function onFetch(event) {
-    let cachedResponse = null;
-    if (event.request.method === 'GET') {
-        // For all navigation requests, try to serve index.html from cache,
-        // unless that request is for an offline resource.
-        // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
-        const shouldServeIndexHtml = event.request.mode === 'navigate'
-            && !manifestUrlList.some(url => url === event.request.url);
-
-        const request = shouldServeIndexHtml ? new URL('index.html', baseUrl).href : event.request;
-        const cache = await caches.open(cacheName);
-        cachedResponse = await cache.match(request);
+    // Only intercept GET requests
+    if (event.request.method !== 'GET') {
+        return;
     }
 
+    const url = new URL(event.request.url);
+
+    const directHitPaths = ['/coverage/'];
+    const isDirectHit = directHitPaths.some(path => url.pathname.startsWith(path));
+
+    if (isDirectHit) {
+        // Fetch directly from the network, ignoring the cache entirely
+        return fetch(event.request);
+    }
+
+    // Serve index.html for navigation requests
+    const isNavigationRequest = event.request.mode === 'navigate';
+
+    const hasFileExtension = url.pathname.match(/\.[a-zA-Z0-9]+$/);
+
+    const shouldServeIndexHtml = isNavigationRequest
+        && !hasFileExtension
+        && !manifestUrlList.some(manifestUrl => manifestUrl === event.request.url);
+
+    const cache = await caches.open(cacheName);
+
+    if (shouldServeIndexHtml) {
+        const indexRequest = new URL('index.html', baseUrl).href;
+        const cachedIndex = await cache.match(indexRequest);
+        if (cachedIndex) return cachedIndex;
+    }
+
+    // Cache-First, fallback to Network
+    const cachedResponse = await cache.match(event.request);
+
+    // Return cached response if found, otherwise hit the network
     return cachedResponse || fetch(event.request);
 }
