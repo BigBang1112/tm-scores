@@ -134,7 +134,18 @@
         {
             return builder =>
             {
-                builder.AddMarkupContent(0, $"{highScore.Rank}) {(highScore.Score == -2 ? default(TimeInt32?) : new TimeInt32(highScore.Score))} by ");
+                string score;
+
+                if (scores is GeneralScores)
+                {
+                    score = highScore.Score.ToString();
+                }
+                else
+                {
+                    score = (highScore.Score == -2 ? default(TimeInt32?) : new TimeInt32(highScore.Score)).ToTmString();
+                }
+
+                builder.AddMarkupContent(0, $"{highScore.Rank}) {score} by ");
                 builder.OpenComponent(1, typeof(FormattedText));
                 builder.AddAttribute(2, "Text", highScore.Nickname);
                 builder.CloseComponent();
