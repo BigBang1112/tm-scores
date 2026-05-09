@@ -36,7 +36,7 @@ internal sealed class ScoresReader(Stream input, bool leaveOpen = true)
 
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
         Span<byte> bytes = stackalloc byte[lengthInBytes];
-        ReadExactly(bytes);
+        BaseStream.ReadExactly(bytes);
 #else
         var bytes = ReadBytes(lengthInBytes);
 #endif

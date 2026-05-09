@@ -1,4 +1,11 @@
 <Solution>
+  <Folder Name="/Položky řešení/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
   <Project Path="TmScores.Showcase/TmScores.Showcase.csproj" />
   <Project Path="TmScores.Tests/TmScores.Tests.csproj" />
   <Project Path="TmScores/TmScores.csproj" />
