@@ -36,7 +36,7 @@ public sealed class LadderScores : IScores, ICollection<LadderLeague>
 
         var timestamp = DeserializationUtils.GetGzipTimestamp(stream);
 
-        using var gz = new GZipStream(stream, CompressionLevel.SmallestSize, leaveOpen: true);
+        using var gz = new GZipStream(stream, CompressionMode.Decompress, leaveOpen: true);
         using var r = new ScoresReader(gz);
         var rw = new ScoresReaderWriter(r);
 
@@ -71,7 +71,7 @@ public sealed class LadderScores : IScores, ICollection<LadderLeague>
 
     public void Serialize(Stream stream)
     {
-        using var gz = new GZipStream(stream, CompressionMode.Compress, leaveOpen: true);
+        using var gz = new GZipStream(stream, CompressionLevel.SmallestSize, leaveOpen: true);
         SerializeRaw(gz);
     }
 
