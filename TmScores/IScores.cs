@@ -11,4 +11,7 @@ public interface IScores : IReadableWritable
 
     void Serialize(string fileName);
     void Serialize(Stream stream);
+
+    void SerializeRaw(string fileName);
+    void SerializeRaw(Stream stream);
 }

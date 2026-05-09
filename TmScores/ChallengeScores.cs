@@ -33,11 +33,29 @@ public sealed class ChallengeScores : IScores, ICollection<Scores>
 
         var timestamp = DeserializationUtils.GetGzipTimestamp(stream);
 
-        using var gz = new GZipStream(stream, CompressionMode.Decompress, leaveOpen: true);
+        using var gz = new GZipStream(stream, CompressionLevel.SmallestSize, leaveOpen: true);
         using var r = new ScoresReader(gz);
         var rw = new ScoresReaderWriter(r);
 
         var scores = new ChallengeScores(timestamp);
+        scores.ReadWrite(rw);
+        return scores;
+    }
+
+    public static ChallengeScores DeserializeRaw(string fileName)
+    {
+        using var fs = File.OpenRead(fileName);
+        return DeserializeRaw(fs);
+    }
+
+    public static ChallengeScores DeserializeRaw(Stream stream)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        using var r = new ScoresReader(stream);
+        var rw = new ScoresReaderWriter(r);
+
+        var scores = new ChallengeScores();
         scores.ReadWrite(rw);
         return scores;
     }
@@ -51,7 +69,18 @@ public sealed class ChallengeScores : IScores, ICollection<Scores>
     public void Serialize(Stream stream)
     {
         using var gz = new GZipStream(stream, CompressionMode.Compress, leaveOpen: true);
-        using var w = new ScoresWriter(gz);
+        SerializeRaw(gz);
+    }
+
+    public void SerializeRaw(string fileName)
+    {
+        using var fs = File.Create(fileName);
+        SerializeRaw(fs);
+    }
+
+    public void SerializeRaw(Stream stream)
+    {
+        using var w = new ScoresWriter(stream);
         var rw = new ScoresReaderWriter(w);
 
         ReadWrite(rw);

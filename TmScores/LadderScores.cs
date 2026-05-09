@@ -36,11 +36,29 @@ public sealed class LadderScores : IScores, ICollection<LadderLeague>
 
         var timestamp = DeserializationUtils.GetGzipTimestamp(stream);
 
-        using var gz = new GZipStream(stream, CompressionMode.Decompress, leaveOpen: true);
+        using var gz = new GZipStream(stream, CompressionLevel.SmallestSize, leaveOpen: true);
         using var r = new ScoresReader(gz);
         var rw = new ScoresReaderWriter(r);
 
         var scores = new LadderScores(timestamp);
+        scores.ReadWrite(rw);
+        return scores;
+    }
+
+    public static LadderScores DeserializeRaw(string fileName)
+    {
+        using var fs = File.OpenRead(fileName);
+        return DeserializeRaw(fs);
+    }
+
+    public static LadderScores DeserializeRaw(Stream stream)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        using var r = new ScoresReader(stream);
+        var rw = new ScoresReaderWriter(r);
+
+        var scores = new LadderScores();
         scores.ReadWrite(rw);
         return scores;
     }
@@ -54,7 +72,18 @@ public sealed class LadderScores : IScores, ICollection<LadderLeague>
     public void Serialize(Stream stream)
     {
         using var gz = new GZipStream(stream, CompressionMode.Compress, leaveOpen: true);
-        using var w = new ScoresWriter(gz);
+        SerializeRaw(gz);
+    }
+
+    public void SerializeRaw(string fileName)
+    {
+        using var fs = File.Create(fileName);
+        SerializeRaw(fs);
+    }
+
+    public void SerializeRaw(Stream stream)
+    {
+        using var w = new ScoresWriter(stream);
         var rw = new ScoresReaderWriter(w);
 
         ReadWrite(rw);

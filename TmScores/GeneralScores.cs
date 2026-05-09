@@ -48,6 +48,27 @@ public sealed class GeneralScores : IScores, ICollection<Scores>
         return scores;
     }
 
+    public static GeneralScores DeserializeRaw(string fileName)
+    {
+        using var fs = File.OpenRead(fileName);
+        return DeserializeRaw(fs);
+    }
+
+    public static GeneralScores DeserializeRaw(Stream stream)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        using var r = new ScoresReader(stream);
+        var rw = new ScoresReaderWriter(r)
+        {
+            IsGeneralScores = true
+        };
+
+        var scores = new GeneralScores();
+        scores.ReadWrite(rw);
+        return scores;
+    }
+
     public void Serialize(string fileName)
     {
         using var fs = File.Create(fileName);
@@ -56,8 +77,19 @@ public sealed class GeneralScores : IScores, ICollection<Scores>
 
     public void Serialize(Stream stream)
     {
-        using var gz = new GZipStream(stream, CompressionMode.Compress, leaveOpen: true);
-        using var w = new ScoresWriter(gz);
+        using var gz = new GZipStream(stream, CompressionLevel.SmallestSize, leaveOpen: true);
+        SerializeRaw(gz);
+    }
+
+    public void SerializeRaw(string fileName)
+    {
+        using var fs = File.Create(fileName);
+        SerializeRaw(fs);
+    }
+
+    public void SerializeRaw(Stream stream)
+    {
+        using var w = new ScoresWriter(stream);
         var rw = new ScoresReaderWriter(w)
         {
             IsGeneralScores = true

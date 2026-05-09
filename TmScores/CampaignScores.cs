@@ -46,6 +46,24 @@ public sealed class CampaignScores : IScores, ICollection<CampaignLeague>
         return scores;
     }
 
+    public static CampaignScores DeserializeRaw(string fileName)
+    {
+        using var fs = File.OpenRead(fileName);
+        return DeserializeRaw(fs);
+    }
+
+    public static CampaignScores DeserializeRaw(Stream stream)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        using var r = new ScoresReader(stream);
+        var rw = new ScoresReaderWriter(r);
+
+        var scores = new CampaignScores();
+        scores.ReadWrite(rw);
+        return scores;
+    }
+
     public void Serialize(string fileName)
     {
         using var fs = File.Create(fileName);
@@ -55,9 +73,19 @@ public sealed class CampaignScores : IScores, ICollection<CampaignLeague>
     public void Serialize(Stream stream)
     {
         using var gz = new GZipStream(stream, CompressionLevel.SmallestSize, leaveOpen: true);
-        using var w = new ScoresWriter(gz);
-        var rw = new ScoresReaderWriter(w);
+        SerializeRaw(gz);
+    }
 
+    public void SerializeRaw(string fileName)
+    {
+        using var fs = File.Create(fileName);
+        SerializeRaw(fs);
+    }
+
+    public void SerializeRaw(Stream stream)
+    {
+        using var w = new ScoresWriter(stream);
+        var rw = new ScoresReaderWriter(w);
         ReadWrite(rw);
     }
 
