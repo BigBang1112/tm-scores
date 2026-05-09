@@ -19,6 +19,7 @@ jobs:
         9.x.x
         8.x.x
       project-path: TmScores
+      test-path: TmScores.Tests
       enable-coverage: true
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
