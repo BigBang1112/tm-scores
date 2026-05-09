@@ -144,30 +144,30 @@ Console.WriteLine(scores.Timestamp); // DateTimeOffset, or null if unavailable
 ## Data model
 
 ```
-CampaignScores                  (ICollection<CampaignLeague>)
+CampaignScores                      (ICollection<CampaignLeague>)
 └── CampaignLeague
-    ├── ChallengeScores[]       (CampaignChallengeScores per map)
-    │   └── Scores[]            (per league)
-    │       ├── Skillpoints     (RecordUnit<int>[])
-    │       └── HighScores      (HighScore[])
-    └── MedalLeagues[]          (CampaignMedalLeague per league)
+    ├── ChallengeScores[]           (CampaignChallengeScores per map)
+    │   └── Scores[]                (per league)
+    │       ├── Skillpoints         (RecordUnit<int>[])
+    │       └── HighScores          (HighScore[])
+    └── MedalLeagues[]              (CampaignMedalLeague per league)
         └── CampaignMedalPlayMode[] (per PlayMode)
             └── RecordUnit<int>[]
 
-GeneralScores                   (ICollection<Scores>)
+GeneralScores                       (ICollection<Scores>)
 └── Scores
-    ├── Skillpoints             (RecordUnit<int>[])
-    └── HighScores              (HighScore[])
+    ├── Skillpoints                 (RecordUnit<int>[])
+    └── HighScores                  (HighScore[])
 
-ChallengeScores                 (ICollection<Scores>)
+ChallengeScores                     (ICollection<Scores>)
 └── Scores
-    ├── Skillpoints             (RecordUnit<int>[])
-    └── HighScores              (HighScore[])
+    ├── Skillpoints                 (RecordUnit<int>[])
+    └── HighScores                  (HighScore[])
 
-LadderScores                    (ICollection<LadderLeague>)
+LadderScores                        (ICollection<LadderLeague>)
 └── LadderLeague
-    ├── PlayerCount             (int)
-    └── Points                  ((int Rank, int Points)[])
+    ├── PlayerCount                 (int)
+    └── Points                      ((int Rank, int Points)[])
 ```
 
 ### Key types
