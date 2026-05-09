@@ -69,7 +69,7 @@ public sealed class ChallengeScores : IScores, ICollection<Scores>
     public void Serialize(Stream stream)
     {
         using var gz = new GZipStream(stream, CompressionLevel.SmallestSize, leaveOpen: true);
-        //SerializeRaw(gz);
+        SerializeRaw(gz);
     }
 
     public void SerializeRaw(string fileName)

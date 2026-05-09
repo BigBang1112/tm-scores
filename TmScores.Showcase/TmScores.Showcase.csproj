@@ -12,6 +12,10 @@
         <InvariantGlobalization>true</InvariantGlobalization>
         <InvariantTimezone>true</InvariantTimezone>
     </PropertyGroup>
+        
+    <PropertyGroup>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    </PropertyGroup>
 
     <ItemGroup>
         <TrimmerRootAssembly Include="TmScores" />
@@ -21,6 +25,10 @@
         <PackageReference Include="Reuniverse.Razor" Version="0.7.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.7" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.7" PrivateAssets="all" />
+        <PackageReference Include="SimplestGitSourceGenerator" Version="1.0.3">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="TmEssentials.Razor" Version="1.1.3" />
     </ItemGroup>
 
