@@ -15,7 +15,10 @@ jobs:
     name: Deploy to Pages
     uses: bigbang1112/workflows/.github/workflows/deploy-pages.yml@main
     with:
-      dotnet-version: 10.x.x
+      dotnet-version: |
+        10.x.x
+        9.x.x
+        8.x.x
       workloads: wasm-tools
       project: TmScores.Showcase
       enable-coverage: true

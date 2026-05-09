@@ -10,5 +10,8 @@ jobs:
     name: Continuous Integration
     uses: bigbang1112/workflows/.github/workflows/ci.yml@main
     with:
-      dotnet-version: 10.x.x
+      dotnet-version: |
+        10.x.x
+        9.x.x
+        8.x.x
       workloads: wasm-tools
