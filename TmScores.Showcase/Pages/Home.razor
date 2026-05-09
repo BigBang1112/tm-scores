@@ -6,63 +6,9 @@
 
 @inject IJSRuntime JS
 
-<PageTitle>TmScores</PageTitle>
+<PageTitle>Home - TmScores</PageTitle>
 
 <ReuContainer>
-    <p>
-        Score files are cached leaderboards and medal ranks used between TrackMania Forever and ManiaPlanet 3 versions of Trackmania (2008-2015).
-    </p>
-    <p>
-        They are typically cached as .gz files in these locations:
-        <ul style="overflow: auto">
-            <li>CampaignScores
-                <ul>
-                    <li><code>C:\ProgramData\TrackMania\CampaignsScores\(CAMPAIGN_ID)\(CAMPAIGN_ID)(LEAGUE_ID).gz</code></li>
-                    <li><code>C:\ProgramData\TmForever\CampaignsScores\Nations\LNations(LEAGUE_ID).gz</code></li>
-                    <li><code>C:\ProgramData\ManiaPlanet\CampaignsScores\(TITLE_ID)\[L](TITLE_ID)(LEAGUE_ID).gz</code></li>
-                    <li><code>Maniaplanet3_Full\CommonData\CampaignsScores\(TITLE_ID)\[L](TITLE_ID)(LEAGUE_ID).gz</code></li>
-                </ul>
-            </li>
-            <li>ChallengeScores
-                <ul>
-                    <li>...from <code>GetChallengesScoresAndPlayerRecords</code> master server request</li>
-                </ul>
-            </li>
-            <li>GeneralScores
-                <ul>
-                    <li><code>C:\ProgramData\TrackMania\CampaignsScores\General\General(LEAGUE_ID).gz</code></li>
-                    <li><code>C:\ProgramData\ManiaPlanet\CampaignsScores\General\General(LEAGUE_ID).gz</code></li>
-                    <li><code>Maniaplanet3_Full\CommonData\CampaignsScores\General\General(LEAGUE_ID).gz</code></li>
-                </ul>
-            </li>
-            <li>LadderScores
-                <ul>
-                    <li><code>C:\ProgramData\TrackMania\LadderScores\Multi(LEAGUE_ID).gz</code></li>
-                    <li><code>C:\ProgramData\TmForever\LadderScores\Multi(LEAGUE_ID).gz</code></li>
-                    <li><code>C:\ProgramData\ManiaPlanet\LadderScores\Multi\Multi(LEAGUE_ID).gz</code></li>
-                    <li><code>Maniaplanet3_Full\CommonData\LadderScores\Multi\Multi(LEAGUE_ID).gz</code></li>
-                </ul>
-            </li>
-        </ul>
-    </p>
-    <p>
-        Further details:
-        <ul>
-            <li>
-                <code>LEAGUE_ID</code> is a unique numeric identifier of either a zone or a group. 
-                It contains scores for all of its parent zones as well.
-            </li>
-            <li>
-                Only full zones and groups exist as score files, parent zones are typically not available for retrieval.
-            </li>
-            <li>
-                Some score files include the L prefix, which is most often visible on the TMNF Nations scores file. 
-                They are limited scores files that only provide medal rankings. 
-                They also appear on demo versions of ManiaPlanet 2-3 title packs.
-                The prefix most likely means "Lite".
-            </li>
-        </ul>
-    </p>
     <div class="buttons">
         <ReuUploadButton OnUpload="UploadCampaignScores" Accept=".gz">CampaignScores</ReuUploadButton>
         <ReuUploadButton OnUpload="UploadChallengeScores" Accept=".gz">ChallengeScores</ReuUploadButton>
@@ -84,6 +30,44 @@
             <ReuButton OnClick="ExportAsRawDataAsync" CssClass="export-button">Export as raw data</ReuButton>
         </div>
     }
+
+    <p>
+        Typical locations of score files:
+        <ul style="overflow: auto">
+            <li>
+                CampaignScores
+                <ul>
+                    <li><code>C:\ProgramData\TrackMania\CampaignsScores\(CAMPAIGN_ID)\(CAMPAIGN_ID)(LEAGUE_ID).gz</code></li>
+                    <li><code>C:\ProgramData\TmForever\CampaignsScores\Nations\LNations(LEAGUE_ID).gz</code></li>
+                    <li><code>C:\ProgramData\ManiaPlanet\CampaignsScores\(TITLE_ID)\[L](TITLE_ID)(LEAGUE_ID).gz</code></li>
+                    <li><code>Maniaplanet3_Full\CommonData\CampaignsScores\(TITLE_ID)\[L](TITLE_ID)(LEAGUE_ID).gz</code></li>
+                </ul>
+            </li>
+            <li>
+                ChallengeScores
+                <ul>
+                    <li>...from <code>GetChallengesScoresAndPlayerRecords</code> master server request</li>
+                </ul>
+            </li>
+            <li>
+                GeneralScores
+                <ul>
+                    <li><code>C:\ProgramData\TrackMania\CampaignsScores\General\General(LEAGUE_ID).gz</code></li>
+                    <li><code>C:\ProgramData\ManiaPlanet\CampaignsScores\General\General(LEAGUE_ID).gz</code></li>
+                    <li><code>Maniaplanet3_Full\CommonData\CampaignsScores\General\General(LEAGUE_ID).gz</code></li>
+                </ul>
+            </li>
+            <li>
+                LadderScores
+                <ul>
+                    <li><code>C:\ProgramData\TrackMania\LadderScores\Multi(LEAGUE_ID).gz</code></li>
+                    <li><code>C:\ProgramData\TmForever\LadderScores\Multi(LEAGUE_ID).gz</code></li>
+                    <li><code>C:\ProgramData\ManiaPlanet\LadderScores\Multi\Multi(LEAGUE_ID).gz</code></li>
+                    <li><code>Maniaplanet3_Full\CommonData\LadderScores\Multi\Multi(LEAGUE_ID).gz</code></li>
+                </ul>
+            </li>
+        </ul>
+    </p>
 
     <ReuTooltip IsGlobal="true"></ReuTooltip>
 </ReuContainer>
