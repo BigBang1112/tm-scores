@@ -182,6 +182,6 @@ LadderScores                        (ICollection<LadderLeague>)
 
 Simple scores viewer and editor is available [here](https://bigbang1112.github.io/tm-scores/).
 
-### Special thanks
+## Special thanks
 
 Goes to Ondra, Mystixor, Mebe, and Zai for sending me their old ManiaPlanet 3 score files, as they are very rare now due to their location in the hidden ProgramData folder. These archives helped to resolve some parsing issues too!
