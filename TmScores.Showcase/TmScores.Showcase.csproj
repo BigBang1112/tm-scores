@@ -9,10 +9,6 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <BlazorWasmPrerenderingDeleteLoadingContents>true</BlazorWasmPrerenderingDeleteLoadingContents>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <InvariantGlobalization>true</InvariantGlobalization>
         <InvariantTimezone>true</InvariantTimezone>
     </PropertyGroup>
