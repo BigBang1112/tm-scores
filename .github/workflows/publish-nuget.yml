@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 jobs:
-  deploy:
+  publish:
     name: Publish NuGet
     uses: bigbang1112/workflows/.github/workflows/publish-nuget.yml@main
     with:
@@ -20,6 +20,5 @@ jobs:
         8.x.x
       project-path: TmScores
       test-path: TmScores.Tests
-      enable-coverage: true
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
